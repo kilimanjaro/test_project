@@ -23,6 +23,8 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    post.views += 1
+    post.save(update_fields=['views'])
     comment_form = CommentForm()
     return render(request, "board/detail.html", {"post": post, "comment_form": comment_form})
 

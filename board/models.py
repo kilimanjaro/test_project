@@ -6,6 +6,7 @@ class Post(models.Model):
     content = models.TextField(verbose_name="내용")
     author = models.CharField(verbose_name="작성자", max_length=50)
     created_at = models.DateTimeField(verbose_name="작성일", auto_now_add=True)
+    views      = models.PositiveIntegerField(verbose_name="조회수", default=0)
 
     class Meta:
         verbose_name = "게시글"
