@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MySite{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #1a1a2e;
+      --navy-mid:   #16213e;
+      --navy-deep:  #0f3460;
+      --blue:       #1a6bc6;
+      --accent:     #63b3ed;
+      --bg:         #f4f6fb;
+      --white:      #ffffff;
+      --text:       #2d3748;
+      --muted:      #718096;
+      --border:     #e2e8f0;
+      --card-bg:    #ffffff;
+      --red:        #e74c3c;
+      --radius:     14px;
+      --shadow:     0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-top: 64px;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── 레이아웃 ── */
+    .container { max-width: 960px; margin: 0 auto; padding: 0 1.2rem; }
+    .main-wrap  { max-width: 900px; margin: 0 auto; padding: 2rem 1.2rem; }
+
+    /* ── 네비바 ── */
+    nav.site-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--navy-deep) 100%);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      height: 64px;
+    }
+    nav.site-nav .container {
+      display: flex; align-items: center; justify-content: space-between; height: 100%;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 1.3rem; letter-spacing: 1px; color: #e2e8f0;
+    }
+    .nav-brand span { color: var(--accent); }
+
+    .nav-menu {
+      display: flex; align-items: center; gap: 4px; list-style: none;
+    }
+    .nav-menu a {
+      display: block; padding: 0.4rem 1rem;
+      color: #a0aec0; font-weight: 500; font-size: 0.95rem;
+      border-radius: 6px; transition: color 0.2s, background 0.2s;
+    }
+    .nav-menu a:hover, .nav-menu a.active {
+      color: #fff; background: rgba(255,255,255,0.08);
+    }
+
+    /* 햄버거 (모바일) */
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav-toggle span {
+      display: block; width: 24px; height: 2px;
+      background: #e2e8f0; border-radius: 2px; transition: 0.3s;
+    }
+
+    @media (max-width: 640px) {
+      .nav-toggle { display: flex; }
+      .nav-menu {
+        display: none; flex-direction: column; gap: 0;
+        position: absolute; top: 64px; left: 0; right: 0;
+        background: var(--navy-mid);
+        padding: 0.5rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+      .nav-menu.open { display: flex; }
+      .nav-menu a { border-radius: 0; padding: 0.75rem 1.5rem; }
+    }
+
+    /* ── 카드 ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .card-body { padding: 1.5rem; }
+
+    /* ── 버튼 ── */
+    .btn {
+      display: inline-block; padding: 0.5rem 1.4rem;
+      font-size: 0.92rem; font-weight: 700; font-family: inherit;
+      border-radius: 50px; border: none; cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s; text-align: center;
+    }
+    .btn:hover  { opacity: 0.88; }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--navy-deep), var(--blue));
+      color: #fff;
+    }
+    .btn-outline {
+      background: transparent; color: var(--muted);
+      border: 1.5px solid var(--border);
+    }
+    .btn-outline:hover { background: var(--border); color: var(--text); }
+    .btn-light {
+      background: #fff; color: var(--navy-deep); font-weight: 700;
+    }
+    .btn-outline-light {
+      background: transparent; color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.6);
+    }
+    .btn-outline-light:hover { background: rgba(255,255,255,0.12); }
+    .btn-sm { padding: 0.35rem 1rem; font-size: 0.85rem; }
+
+    /* ── 폼 ── */
+    .form-group { margin-bottom: 1.1rem; }
+    .form-label {
+      display: block; margin-bottom: 0.4rem;
+      font-size: 0.87rem; color: var(--muted); font-weight: 500;
+    }
+    .input-field {
+      width: 100%; padding: 0.55rem 0.85rem;
+      font-size: 0.95rem; font-family: inherit; color: var(--text);
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: 8px; outline: none; transition: border-color 0.2s;
+    }
+    .input-field:focus { border-color: var(--accent); }
+    textarea.input-field { resize: vertical; }
+
+    /* ── 배지 ── */
+    .badge {
+      display: inline-block; padding: 2px 8px;
+      font-size: 0.75rem; font-weight: 700; border-radius: 50px;
+      background: var(--navy-deep); color: #fff;
+    }
+    .comment-dot {
+      font-size: 0.65em; color: #fff; background: var(--red);
+      border-radius: 50%; padding: 1px 5px; margin-left: 2px; font-weight: bold;
+      vertical-align: super;
+    }
+
+    /* ── 유틸리티 ── */
+    .flex         { display: flex; }
+    .flex-center  { display: flex; align-items: center; }
+    .flex-between { display: flex; align-items: center; justify-content: space-between; }
+    .flex-wrap    { flex-wrap: wrap; }
+    .gap-1 { gap: 0.4rem; }
+    .gap-2 { gap: 0.8rem; }
+    .gap-3 { gap: 1.2rem; }
+    .text-muted   { color: var(--muted); }
+    .text-center  { text-align: center; }
+    .mt-1 { margin-top: 0.4rem; }
+    .mt-2 { margin-top: 0.8rem; }
+    .mt-3 { margin-top: 1.2rem; }
+    .mt-4 { margin-top: 1.8rem; }
+    .mb-1 { margin-bottom: 0.4rem; }
+    .mb-2 { margin-bottom: 0.8rem; }
+    .mb-3 { margin-bottom: 1.2rem; }
+    .mb-4 { margin-bottom: 1.8rem; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+
+    /* ── 푸터 ── */
+    footer {
+      background: var(--navy); color: var(--muted);
+      padding: 1.5rem 0; margin-top: 4rem;
+      text-align: center; font-size: 0.85rem;
+    }
+  </style>
+  {% block extra_style %}{% endblock %}
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="container">
+      <a class="nav-brand" href="{% url 'index' %}">My<span>Site</span></a>
+      <button class="nav-toggle" id="navToggle" aria-label="메뉴 열기">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="{% url 'index' %}" {% block nav_home %}{% endblock %}>홈</a></li>
+        <li><a href="{% url 'board:list' %}" {% block nav_board %}{% endblock %}>게시판</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="main-wrap">
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    <p>&copy; 2026 MySite &mdash; Made with Django</p>
+  </footer>
+
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function () {
+      document.getElementById('navMenu').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

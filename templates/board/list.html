@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block nav_board %}class="active"{% endblock %}
+{% block title %}게시판 - MySite{% endblock %}
+
+{% block extra_style %}
+<style>
+  .board-header { margin-bottom: 1.5rem; }
+  .board-header h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.2rem; }
+
+  .post-list { background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); overflow: hidden; }
+  .post-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.95rem 1.4rem;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.15s;
+    color: inherit;
+  }
+  .post-item:last-child { border-bottom: none; }
+  .post-item:hover { background: #f7f9fc; }
+
+  .post-left   { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+  .post-num    { font-size: 0.78rem; color: #a0aec0; min-width: 28px; }
+  .post-title  { font-size: 0.97rem; color: #2d3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .post-right  { display: flex; align-items: center; gap: 1rem; white-space: nowrap; font-size: 0.82rem; color: #718096; flex-shrink: 0; }
+
+  .empty-box { text-align: center; padding: 3.5rem 1rem; background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .empty-box .icon { font-size: 3rem; margin-bottom: 0.8rem; }
+  .empty-box p { color: #718096; margin-bottom: 1rem; }
+
+  .pagination-nav { display: flex; justify-content: center; gap: 0.3rem; flex-wrap: wrap; }
+  .page-btn {
+    display: inline-block; min-width: 36px; padding: 0.35rem 0.7rem;
+    text-align: center; border-radius: 6px; font-size: 0.88rem; color: #4a5568;
+    background: #fff; border: 1.5px solid #e2e8f0;
+    transition: background 0.15s, color 0.15s;
+  }
+  .page-btn:hover { background: #edf2f7; color: #2d3748; }
+  .page-btn-active { background: #0f3460; color: #fff; border-color: #0f3460; font-weight: 700; }
+  .page-btn-active:hover { background: #1a6bc6; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="flex-between board-header">
+  <div>
+    <h3>게시판</h3>
+    <span class="text-muted" style="font-size:0.85rem;">총 {{ posts.paginator.count }}개의 글</span>
+  </div>
+  <a href="{% url 'board:write' %}" class="btn btn-primary">글 작성</a>
+</div>
+
+<!-- 검색 -->
+<form method="get" class="mb-3 flex gap-2">
+  <input type="text" name="q" value="{{ query }}" class="input-field" placeholder="제목 검색...">
+  <button type="submit" class="btn btn-outline" style="white-space:nowrap;">검색</button>
+  {% if query %}
+  <a href="{% url 'board:list' %}" class="btn btn-outline" style="white-space:nowrap;">초기화</a>
+  {% endif %}
+</form>
+
+{% if posts %}
+<div class="post-list">
+  {% for post in posts %}
+  <a href="{% url 'board:detail' post.pk %}" class="post-item">
+    <div class="post-left">
+      <span class="post-num">#{{ post.pk }}</span>
+      <span class="post-title">
+        {{ post.title }}
+        {% if post.comments.count > 0 %}
+        <span class="comment-dot">{{ post.comments.count }}</span>
+        {% endif %}
+      </span>
+    </div>
+    <div class="post-right">
+      <span>{{ post.author }}</span>
+      <span>{{ post.created_at|date:"m/d H:i" }}</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-box">
+  <div class="icon">📭</div>
+  <p>아직 작성된 글이 없습니다.</p>
+  <a href="{% url 'board:write' %}" class="btn btn-primary">첫 글 작성하기</a>
+</div>
+{% endif %}
+
+<!-- 페이지네이션 -->
+{% if posts.has_other_pages %}
+<nav class="pagination-nav mt-3">
+  {% if posts.has_previous %}
+  <a class="page-btn" href="?page={{ posts.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">‹</a>
+  {% endif %}
+  {% for num in posts.paginator.page_range %}
+  <a class="page-btn {% if posts.number == num %}page-btn-active{% endif %}" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+  {% endfor %}
+  {% if posts.has_next %}
+  <a class="page-btn" href="?page={{ posts.next_page_number }}{% if query %}&q={{ query }}{% endif %}">›</a>
+  {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

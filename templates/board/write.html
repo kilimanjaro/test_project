@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block nav_board %}class="active"{% endblock %}
+{% block title %}{% if edit %}글 수정{% else %}글 작성{% endif %} - MySite{% endblock %}
+
+{% block extra_style %}
+<style>
+  .write-card {
+    background: #fff; border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 2rem; max-width: 700px; margin: 0 auto;
+  }
+  .write-card h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .btn-row { display: flex; gap: 0.7rem; margin-top: 0.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="write-card">
+  <h4>{% if edit %}✏️ 글 수정{% else %}✏️ 글 작성{% endif %}</h4>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="form-label">제목</label>
+      {{ form.title }}
+    </div>
+    <div class="form-group">
+      <label class="form-label">작성자</label>
+      {{ form.author }}
+    </div>
+    <div class="form-group">
+      <label class="form-label">내용</label>
+      {{ form.content }}
+    </div>
+    <div class="btn-row">
+      <button type="submit" class="btn btn-primary">등록</button>
+      <a href="{% url 'board:list' %}" class="btn btn-outline">취소</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

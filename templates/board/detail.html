@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block nav_board %}class="active"{% endblock %}
+{% block title %}{{ post.title }} - MySite{% endblock %}
+
+{% block extra_style %}
+<style>
+  .post-card   { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(0,0,0,0.07); padding:1.8rem; margin-bottom:1.2rem; }
+  .post-title  { font-size:1.35rem; font-weight:700; margin-bottom:0.75rem; }
+  .post-meta   { display:flex; gap:1.2rem; font-size:0.85rem; color:#718096; margin-bottom:1.2rem; flex-wrap:wrap; }
+  .post-body   { white-space:pre-wrap; line-height:1.85; font-size:0.96rem; min-height:100px; }
+
+  .comment-section { margin-top: 2rem; }
+  .comment-heading { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.8rem; }
+  .comment-heading h6 { font-size:1rem; font-weight:700; }
+
+  .comment-card {
+    background:#fff; border-radius:10px;
+    border-left:3px solid #63b3ed;
+    box-shadow:0 1px 6px rgba(0,0,0,0.06);
+    padding:0.9rem 1.2rem; margin-bottom:0.6rem;
+  }
+  .comment-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; }
+  .comment-author { font-weight:700; font-size:0.9rem; color:#2d3748; }
+  .comment-date   { font-size:0.8rem; color:#a0aec0; }
+  .comment-body   { font-size:0.93rem; color:#4a5568; white-space:pre-wrap; }
+
+  .comment-empty  { text-align:center; padding:2rem 1rem; color:#a0aec0; font-size:0.9rem; }
+
+  .comment-form-card {
+    background:#fff; border-radius:14px;
+    border-top:3px solid #0f3460;
+    box-shadow:0 2px 12px rgba(0,0,0,0.07);
+    padding:1.5rem; margin-top:1.5rem;
+  }
+  .comment-form-card h6 { font-weight:700; margin-bottom:1rem; font-size:0.97rem; }
+  .author-row { max-width: 280px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="post-card">
+  <h4 class="post-title">{{ post.title }}</h4>
+  <div class="post-meta">
+    <span>✍ {{ post.author }}</span>
+    <span>🕐 {{ post.created_at|date:"Y-m-d H:i" }}</span>
+    <span>💬 답글 {{ post.comments.count }}개</span>
+  </div>
+  <hr>
+  <div class="post-body">{{ post.content }}</div>
+</div>
+
+<div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; margin-bottom:1.2rem;">
+  <a href="{% url 'board:list' %}" style="font-size:0.75rem; padding:0.45rem 0.9rem; color:#4a5568; background:linear-gradient(135deg,#edf2f7,#e2e8f0); border:none; border-radius:20px; text-decoration:none; box-shadow:0 1px 4px rgba(0,0,0,0.12); letter-spacing:0.02em;">← 목록으로</a>
+  <a href="{% url 'board:edit' post.pk %}" style="font-size:0.75rem; padding:0.45rem 0.9rem; color:#fff; background:linear-gradient(135deg,#4299e1,#2b6cb0); border:none; border-radius:20px; text-decoration:none; box-shadow:0 1px 6px rgba(66,153,225,0.35); letter-spacing:0.02em;">✏ 수정</a>
+  <form method="post" action="{% url 'board:delete' post.pk %}" onsubmit="return confirm('정말 삭제하시겠습니까?')" style="display:contents;">
+    {% csrf_token %}
+    <button type="submit" style="font-size:0.75rem; padding:0.45rem 0.9rem; color:#fff; background:linear-gradient(135deg,#e53e3e,#c0392b); border:none; border-radius:20px; box-shadow:0 1px 6px rgba(229,62,62,0.35); letter-spacing:0.02em; cursor:pointer;">🗑 삭제</button>
+  </form>
+</div>
+
+<!-- 답글 목록 -->
+<div class="comment-section">
+  <div class="comment-heading">
+    <h6>답글</h6>
+    <span class="badge">{{ post.comments.count }}</span>
+  </div>
+
+  {% for comment in post.comments.all %}
+  <div class="comment-card">
+    <div class="comment-meta">
+      <span class="comment-author">{{ comment.author }}</span>
+      <div style="display:flex; align-items:center; gap:0.7rem;">
+        <span class="comment-date">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+        <form method="post" action="{% url 'board:comment_delete' comment.pk %}" onsubmit="return confirm('댓글을 삭제하시겠습니까?')" style="display:contents;">
+          {% csrf_token %}
+          <button type="submit" style="font-size:0.72rem; padding:0.2rem 0.6rem; color:#e53e3e; background:none; border:1px solid #e53e3e; border-radius:12px; cursor:pointer;">삭제</button>
+        </form>
+      </div>
+    </div>
+    <p class="comment-body">{{ comment.content }}</p>
+  </div>
+  {% empty %}
+  <div class="comment-empty">
+    <p>아직 답글이 없습니다. 첫 번째 답글을 작성해 보세요.</p>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- 답글 작성 -->
+<div class="comment-form-card">
+  <h6>답글 작성</h6>
+  <form method="post" action="{% url 'board:comment_write' post.pk %}">
+    {% csrf_token %}
+    <div class="form-group author-row">
+      <label class="form-label">작성자</label>
+      {{ comment_form.author }}
+    </div>
+    <div class="form-group">
+      <label class="form-label">내용</label>
+      {{ comment_form.content }}
+    </div>
+    <button type="submit" class="btn btn-primary">등록</button>
+  </form>
+</div>
+{% endblock %}

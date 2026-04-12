@@ -1,0 +1,23 @@
+venv/
+db.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+.env
+*.sqlite3
+.DS_Store
+
+# Claude 로컬 설정
+.claude/
+
+# 대화 로그 및 임시 파일
+*.txt
+2026-*.md
+
+# PPT/PDF 실습 파일
+*.pptx
+*.pdf
+make_*.py
+practice_*.py
+questions.txt
+수강생이름.png

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block nav_home %}class="active"{% endblock %}
+{% block title %}홈 - MySite{% endblock %}
+
+{% block extra_style %}
+<style>
+  /* 히어로 */
+  .hero {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    border-radius: 20px;
+    color: #fff;
+    padding: 4rem 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .hero-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .hero h1   { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .hero p    { color: #a0aec0; font-size: 1.05rem; margin-bottom: 1.8rem; }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* 특징 카드 그리드 */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 640px) {
+    .feature-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.6rem; }
+  }
+  .feature-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 2rem 1.5rem;
+    text-align: center;
+  }
+  .feature-card .icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+  .feature-card h5    { font-weight: 700; margin-bottom: 0.5rem; }
+  .feature-card p     { color: #718096; font-size: 0.92rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div class="hero-icon">💬</div>
+  <h1>자유 게시판에 오신 걸 환영합니다</h1>
+  <p>자유롭게 글을 쓰고 서로 소통해 보세요.</p>
+  <div class="hero-btns">
+    <a href="{% url 'board:list' %}" class="btn btn-light">게시판 보기</a>
+    <a href="{% url 'board:write' %}" class="btn btn-outline-light">글 작성하기</a>
+  </div>
+</div>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <div class="icon">📝</div>
+    <h5>자유 게시판</h5>
+    <p>누구나 자유롭게 글을 쓸 수 있어요.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">💬</div>
+    <h5>답글 기능</h5>
+    <p>글마다 답글을 달아 소통할 수 있어요.</p>
+  </div>
+  <div class="feature-card">
+    <div class="icon">⚡</div>
+    <h5>최신글 우선</h5>
+    <p>최신 게시글이 가장 위에 표시돼요.</p>
+  </div>
+</div>
+{% endblock %}
