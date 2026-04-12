@@ -23,3 +23,13 @@ class CommentDeleteTest(TestCase):
         )
         self.assertRedirects(response, reverse('board:detail', args=[self.post.pk]))
         self.assertFalse(Comment.objects.filter(pk=self.comment.pk).exists())
+
+    def test_comment_delete_get_does_not_delete(self):
+        """GET 요청으로는 댓글이 삭제되지 않는지 확인"""
+        self.client.get(reverse('board:comment_delete', args=[self.comment.pk]))
+        self.assertTrue(Comment.objects.filter(pk=self.comment.pk).exists())
+
+    def test_comment_delete_nonexistent_returns_404(self):
+        """존재하지 않는 댓글 삭제 시 404를 반환하는지 확인"""
+        response = self.client.post(reverse('board:comment_delete', args=[9999]))
+        self.assertEqual(response.status_code, 404)
