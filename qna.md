@@ -172,3 +172,21 @@ Claude Code가 Windows에서 **Git Bash**를 내장하고 있거나, 설치된 G
 즉, 컴퓨터에 **Git for Windows**가 설치되어 있고, 그 안에 포함된 bash를 Claude Code가 사용하는 겁니다. WSL과는 별개로, 이미 bash가 동작하고 있는 셈입니다.
 
 ---
+
+## 스킬이 `~\.claude\skills`와 `~\.claude\commands` 두 군데를 말하는데, 실제로는 어디에 있나?
+
+**답변:**
+
+두 디렉토리의 역할이 **다릅니다.**
+
+| 디렉토리 | 종류 | 실행 방식 |
+|---------|------|---------|
+| `~\.claude\commands\` | **슬래시 커맨드** | 사용자가 `/git-push` 처럼 직접 입력 |
+| `~\.claude\skills\` | **자동 트리거 스킬** | Claude가 문맥 보고 자동으로 판단해서 사용 |
+
+`/skills` 다이얼로그가 두 곳을 함께 보여주는 이유는, 사용자 입장에서 만든 커스텀 도구들을 한 곳에서 확인할 수 있게 하기 위해서입니다.
+
+- `commands/git-push.md` → `/git-push` 로 수동 호출
+- `skills/presentation/SKILL.md` → "발표 자료 만들어" 같은 말을 하면 자동 실행
+
+---
