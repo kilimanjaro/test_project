@@ -11,8 +11,9 @@ __pycache__/
 .claude/
 
 # 대화 로그 및 임시 파일
-*.txt
+questions.txt
 2026-*.md
+2026-*.txt
 
 # PPT/PDF 실습 파일
 *.pptx
