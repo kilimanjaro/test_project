@@ -44,6 +44,7 @@
     <span>✍ {{ post.author }}</span>
     <span>🕐 {{ post.created_at|date:"Y-m-d H:i" }}</span>
     <span>💬 답글 {{ post.comments.count }}개</span>
+    <span>👁 조회 {{ post.views }}회</span>
   </div>
   <hr>
   <div class="post-body">{{ post.content }}</div>
