@@ -67,5 +67,5 @@ python manage.py createsuperuser
 ## 기술 스택
 
 - **Backend**: Django 5.x
-- **Frontend**: Django 템플릿 + Bootstrap 5 (CDN)
+- **Frontend**: Django 템플릿 
 - **DB**: SQLite
